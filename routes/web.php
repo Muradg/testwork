@@ -11,6 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', 'HomeController@index')->name('home');
+
+
+Route::prefix('guestbook')->group(function () {
+    Route::get('/', 'GuestbookController@index')->name('guestbook');
+
+    Route::middleware(['auth'])->group(function () {
+        Route::post('/send', 'GuestbookController@send')->name('guestbook-send');
+        Route::match(['get', 'post'], '/answer/{message_id}', 'GuestbookController@answer')->name('guestbook-answer');
+    });
 });
+
+Auth::routes();
+
